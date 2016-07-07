@@ -1,5 +1,5 @@
-# Confy
-> Confy conference Web application
+# EasyShop
+> EasyShop conference Web application
 
 ## Requirements
    1. Install nodejs/npm
@@ -14,12 +14,12 @@
    2. Cloning the projet
 
    ```
-   $ git clone https://github.com/Lazhari/confy.git
+   $ git clone https://github.com/otawara/easyShop.git
    ```
    3. Start Project
 
    ```
-   $ cd confy
+   $ cd easyShop
    $ npm install
    $ bower install
    $ node-dev ./bin/wwww

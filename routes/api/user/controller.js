@@ -1,7 +1,7 @@
 'use strict';
 
 const User = require('../../../models/user');
-const Publication = require('../../../models/publication');
+// const Publication = require('../../../models/publication');
 
 
 exports.validateUser = (req, res, next) => {
@@ -32,12 +32,13 @@ exports.create = (req, res, next) => {
     let user = new User({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
+        location: req.body.location,
         email: req.body.email,
+        phone: req.body.phone,
         gender: req.body.gender,
+        role: req.body.role,
         password: req.body.password,
         role: req.body.role,
-        registrations: req.body.registrations,
-        domaine: req.body.domaine,
         created: new Date()
     });
     user.save((err) => {
@@ -78,9 +79,6 @@ exports.update = (req, res, next) => {
         user.location = req.body.location || user.location;
         user.phone = req.body.phone || user.phone;
         user.avatar_url = req.body.avatar_url || user.avatar_url;
-        user.university = req.body.university || user.university;
-        user.labo = req.body.labo || user.labo;
-        user.domaine = req.body.domaine || user.domaine;
         if(req.body.password)
             user.password = req.body.password;
         user.updated = new Date();
@@ -127,11 +125,9 @@ exports.delete = (req, res, next) => {
     });
 };
 
-exports.getUsersByRoleAndCongre = (req, res, next) => {
+exports.getUsersByRole = (req, res, next) => {
     let role = req.params.role;
-    let congreId = req.params.congreId;
-    console.log(role + congreId);
-    User.find({"role" : role, "registrations.congreId" : congreId, "deleted" : false})
+    User.find({"role" : role, "deleted" : false})
         .exec((err, users) => {
         if(err || !users) {
             return res.send({
@@ -185,36 +181,36 @@ exports.getUsersByCongre = (req, res, next) => {
     });
 };
 
-exports.getReviewersByEvaluation = (req, res, next) => {
-    let evaluation = req.params.evaluation;
-
-    console.log(evaluation);
-    Publication.distinct("evaluation.reviewer_id",{"evaluation.value" : evaluation})
-        .exec((err, reviewers_id) => {
-        if(err || !reviewers_id) {
-            return res.send({
-                ok: false,
-                message: 'Publications not found'
-            });
-        }
-
-        console.log(reviewers_id);
-
-        User.find({"_id" : {"$in" : reviewers_id}})
-            .exec((err, reviewers) => {
-            if(err || !reviewers) {
-                return res.send({
-                    ok: false,
-                    message: 'Reviewers not found'
-                });
-            }
-            return res.send({
-                ok: true,
-                data: reviewers
-            });
-        });
-    });
-};
+// exports.getReviewersByEvaluation = (req, res, next) => {
+//     let evaluation = req.params.evaluation;
+//
+//     console.log(evaluation);
+//     Publication.distinct("evaluation.reviewer_id",{"evaluation.value" : evaluation})
+//         .exec((err, reviewers_id) => {
+//         if(err || !reviewers_id) {
+//             return res.send({
+//                 ok: false,
+//                 message: 'Publications not found'
+//             });
+//         }
+//
+//         console.log(reviewers_id);
+//
+//         User.find({"_id" : {"$in" : reviewers_id}})
+//             .exec((err, reviewers) => {
+//             if(err || !reviewers) {
+//                 return res.send({
+//                     ok: false,
+//                     message: 'Reviewers not found'
+//                 });
+//             }
+//             return res.send({
+//                 ok: true,
+//                 data: reviewers
+//             });
+//         });
+//     });
+// };
 
 exports.me = (req, res, next) => {
     console.log('me ctrl');
